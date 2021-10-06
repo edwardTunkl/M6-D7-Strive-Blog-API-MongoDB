@@ -2,7 +2,7 @@ import express from "express"
 import createHttpError from "http-errors"
 
 import BlogPostModel from "./schema.js"
-
+import CommentModel from '../comments/schema.js'
 const blogPostRouter = express.Router()
 
 //---GET---
@@ -81,5 +81,27 @@ blogPostRouter.delete("/:blogId", async (req, res, next) => {
     next(error)
   }
 })
+
+//---COMMENTS---
+
+//---POST---
+
+blogPostRouter.post("/:blogId/comments", async(req, res, next) => {
+
+try {
+  const updatedBlogPost = await BlogPostModel.findByIdAndUpdate(req.params.blogId, {$push: {comments: req.body.comment}}, {new:true})
+  if(updatedBlogPost){
+    res.send(updatedBlogPost)
+  }else {
+    next(createHttpError(404, `Blog with Id: ${req.params.blogId} not found!`))
+  }
+} catch (error) {
+  next(error)
+}
+})
+
+//---GET---
+
+
 
 export default blogPostRouter

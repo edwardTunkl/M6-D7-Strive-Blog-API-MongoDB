@@ -10,7 +10,6 @@ const blogPostRouter = express.Router()
 blogPostRouter.get("/", async (req, res, next) => {
   try {
     const blogPosts = await BlogPostModel.find()
-
     res.send(blogPosts)
   } catch (error) {
     next(error)
@@ -22,7 +21,6 @@ blogPostRouter.get("/", async (req, res, next) => {
 blogPostRouter.get("/:blogId", async (req, res, next) => {
   try {
     const blogId = req.params.blogId
-
     const blogPost = await BlogPostModel.findById(blogId) // expects query as parameter
 
     if (blogPost) {
@@ -72,7 +70,6 @@ blogPostRouter.put("/:blogId", async (req, res, next) => {
 blogPostRouter.delete("/:blogId", async (req, res, next) => {
   try {
     const blogId = req.params.blogId
-
     const deletedBlogPost = await BlogPostModel.findByIdAndDelete(blogId)
 
     if (deletedBlogPost) {

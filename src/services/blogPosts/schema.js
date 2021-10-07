@@ -11,10 +11,7 @@ const blogPostSchema = new Schema(
       value: { type: Number, required: false },
       unit: { type: String, required: false },
     },
-    author: {
-      name: { type: String, required: true },
-      avatar: { type: String, required: false },
-    },
+    authors: [],
     content: { type: String, required: true },
     comments: [],
   },

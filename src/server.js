@@ -4,6 +4,7 @@ import listEndpoints from 'express-list-endpoints'
 import mongoose from 'mongoose'
 import { notFound, badRequest, genericError } from './ErrorHandlers.js'
 import blogPostRouter from './services/blogPosts/index.js'
+import authorsRouter from './services/authors/index.js'
 
 const port = process.env.PORT || 3001
 const server = express()
@@ -14,7 +15,7 @@ server.use(cors())
 server.use(express.json())
 //---Routes---
 server.use("/blogPosts", blogPostRouter)
-
+server.use("/authors", authorsRouter)
 //---ErrorHandlers---
 
 server.use(notFound)

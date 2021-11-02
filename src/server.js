@@ -10,14 +10,14 @@ const port = process.env.PORT || 3001
 const server = express()
 
 //---Middlewares---
-
 server.use(cors())
 server.use(express.json())
+
 //---Routes---
 server.use("/blogPosts", blogPostRouter)
 server.use("/authors", authorsRouter)
-//---ErrorHandlers---
 
+//---ErrorHandlers---
 server.use(notFound)
 server.use(badRequest)
 server.use(genericError)

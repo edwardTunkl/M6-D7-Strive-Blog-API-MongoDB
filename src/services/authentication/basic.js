@@ -5,7 +5,8 @@ import AuthorModel from '../authors/schema.js'
 
 export const AuthorizationMiddleware = async (req, res, next) => {
   console.log("THIS IS REQ HEADERS", req.headers)
-
+  console.log("JWT_SECRET",process.env.JWT_SECRET)
+  
   if (!req.headers.authorization) {
     next(createHttpError(401, "Please provide credentials in Authorization header"))
   } else {

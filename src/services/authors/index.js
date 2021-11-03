@@ -11,20 +11,20 @@ const authorsRouter = express.Router();
 
 //---Post(/login)---
 
-authorsRouter.post("/login", AuthorizationMiddleware, async (req, res, next) => {
+authorsRouter.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    // veryfiy creds
-    const user = await AuthorModel.checkCredentials(email, password);
 
-    if (user) {
+    const author = await AuthorModel.checkCredentials(email, password);
+    
+    if (author) {
 
-      const accessToken = await JWTAuthenticate(user);
+      const accessToken = await JWTAuthenticate(author);
       res.send({ accessToken });
 
-    } else {
-      next(createHttpError(401, "GO HOME!!!"));
-    }
+     } else {
+       next(createHttpError(401, "Credentials are not ok!"));
+      }
   } catch (error) {
     next(error);
   }
@@ -50,7 +50,7 @@ authorsRouter.get(
 
 //---Get---
 
-authorsRouter.get("/", async (req, res, next) => {
+authorsRouter.get("/", AuthorizationMiddleware, async (req, res, next) => {
   try {
     const newQuery = q2m(req.query);
     const total = await AuthorModel.countDocuments(newQuery.criteria);
@@ -74,7 +74,7 @@ authorsRouter.get("/", async (req, res, next) => {
 
 //---Get:id---
 
-authorsRouter.get("/:authorId", async (req, res, next) => {
+authorsRouter.get("/:authorId", AuthorizationMiddleware, async (req, res, next) => {
   try {
     const authorId = req.params.authorId;
     const author = await AuthorModel.findById(authorId); // expects query as parameter
@@ -104,7 +104,7 @@ authorsRouter.post("/register", async (req, res, next) => {
 
 //---Put---
 
-authorsRouter.put("/:authorId", async (req, res, next) => {
+authorsRouter.put("/:authorId", AuthorizationMiddleware, async (req, res, next) => {
   try {
     const authorId = req.params.authorId;
     const modifiedAuthor = await AuthorModel.findByIdAndUpdate(
@@ -127,7 +127,7 @@ authorsRouter.put("/:authorId", async (req, res, next) => {
 
 //---Delete---
 
-authorsRouter.delete("/:authorId", async (req, res, next) => {
+authorsRouter.delete("/:authorId", AuthorizationMiddleware, async (req, res, next) => {
   try {
     const authorId = req.params.authorId;
     const deletedAuthor = await AuthorModel.findByIdAndDelete(authorId);

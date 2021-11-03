@@ -6,20 +6,24 @@ import CommentModel from '../comments/schema.js'
 
 import { AuthorizationMiddleware } from "../authentication/basic.js"
 
+
+
 const blogPostRouter = express.Router()
 
 //---GET---
 
 blogPostRouter.get("/", async (req, res, next) => {
   try {
+  
     const Query = q2m(req.query)
     const total = await BlogPostModel.countDocuments(Query.criteria)
-    const books = await BlogPostModel.find(Query.criteria, Query.options.fields)
+    const blogPosts = await BlogPostModel.find(Query.criteria, Query.options.fields)
       .limit(Query.options.limit || 4)
       .skip(Query.options.skip)
       .sort(Query.options.sort)
 
-    res.send(blogPosts, { links: Query.links("/", total), total, pageTotal: Math.ceil(total / Query.options.limit)})
+    // res.send(blogPosts, { links: Query.links("/", total), total, pageTotal: Math.ceil(total / Query.options.limit)})
+    res.send(blogPosts)
   } catch (error) {
     next(error)
   }

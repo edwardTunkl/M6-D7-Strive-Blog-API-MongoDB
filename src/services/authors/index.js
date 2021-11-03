@@ -2,8 +2,24 @@ import express from "express"
 import q2m from "query-to-mongo" // Translates queries in browser into mongo readable queries (F**k yeah!!!)
 
 import AuthorModel from './schema.js'
+import BlogPostModel from './schema.js'
+import { AuthorizationMiddleware } from "../authentication/basic.js"
 
 const authorsRouter = express.Router()
+
+
+//---Get(me/stories)---
+
+authorsRouter.get("/me/stories", AuthorizationMiddleware, async (req, res, next) =>{
+try {
+  const posts = await BlogPostModel.find({author: req.user._id.toString()})
+  res.status(200).send(posts)
+} catch (error) {
+  next(error)
+}
+
+})
+
 
 //---Get---
 

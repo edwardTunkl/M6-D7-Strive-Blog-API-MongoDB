@@ -16,15 +16,13 @@ export const AuthorizationMiddleware = async (req, res, next) => {
     console.log("THIS IS EMAIL ", email)
     console.log("THIS IS PASSWORD ", password)
 
-    // 3. Once we obtain plain credentials (diego@strive.com:1234), we need to find the user in db, compare received pw with the hashed one, if they are not ok --> trigger an error (401)
-
     const user = await AuthorModel.checkCredentials(email, password)
     if (user) {
-      // if the credentials were ok we can proceed to what is next (another middleware, route handler)
-      req.user = user // we are attaching to the request the user document
+                                // if the credentials were ok => ....another middleware, route handler, etc
+      req.user = user           // attaching to the request the user document
       next()
     } else {
-      // if credentials problems --> user was null
+                                // if problem with creds--> user is null
       next(createHttpError(401, "Credentials seem incorrect!"))
     }
  }

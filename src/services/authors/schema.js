@@ -7,7 +7,9 @@ const AuthorModel = new Schema(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: {type:String, required: true},
-    password: {type: String, required: true}
+    password: {type: String, required: true},
+    refreshToken: { type: String },
+    googleId: { type: String }
   },
   { timestamp: true }
 );
@@ -23,7 +25,7 @@ AuthorModel.pre("save", async function (next) {
   next()
 })
 
-//---aviod sending critial data in json response---
+//---avoid sending critial data in json response---
 
 AuthorModel.methods.toJSON = function (){
   const userDocument = this

@@ -5,13 +5,19 @@ import mongoose from 'mongoose'
 import { notFound, badRequest, genericError } from './ErrorHandlers.js'
 import blogPostRouter from './services/blogPosts/index.js'
 import authorsRouter from './services/authors/index.js'
+import passport from "passport"
+import GoogleStrategy from './services/authentication/oauth.js'
 
 const port = process.env.PORT || 3001
 const server = express()
 
 //---Middlewares---
+passport.use("google", GoogleStrategy)
+
+
 server.use(cors())
 server.use(express.json())
+server.use(passport.initialize())
 
 //---Routes---
 server.use("/blogPosts", blogPostRouter)

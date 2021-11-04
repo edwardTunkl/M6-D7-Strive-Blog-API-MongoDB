@@ -3,6 +3,9 @@ import GoogleStrategy from "passport-google-oauth20"
 import AuthorModel from "../authors/schema.js"
 import { JWTAuthenticate } from "./token.js" 
 
+console.log(process.env.GOOGLE_OAUTH_ID)
+console.log(process.env.GOOGLE_OAUTH_SECRET)
+console.log(`${process.env.API_URL}/authors/googleRedirect`)
 
 const googleStrategy = new GoogleStrategy(
   {
@@ -28,8 +31,8 @@ const googleStrategy = new GoogleStrategy(
         // 3. If it is not there --> add user to our db and create tokens for him/her
 
         const newUser = {
-          name: googleProfile.name.givenName,
-          surname: googleProfile.name.familyName,
+          firstName: googleProfile.name.givenName,
+          lastName: googleProfile.name.familyName,
           email: googleProfile.emails[0].value,
           googleId: googleProfile.id,
         }

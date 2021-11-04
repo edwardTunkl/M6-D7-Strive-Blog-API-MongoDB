@@ -7,9 +7,9 @@ const AuthorModel = new Schema(
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     email: {type:String, required: true},
-    password: {type: String, required: true},
+    password: {type: String, required: function () { return !Boolean(this.googleId) }},
     refreshToken: { type: String },
-    googleId: { type: String }
+    googleId: { type: String, required: function () { return !Boolean(this.password) } }
   },
   { timestamp: true }
 );

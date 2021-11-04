@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
-const blogPostSchema = new Schema(
+const blogPostModel = new Schema(
   {
     category: { type: String, required: true },
     title: { type: String, required: true },
@@ -20,4 +20,4 @@ const blogPostSchema = new Schema(
   }
 );
 
-export default model("BlogPost", blogPostSchema);
+export default model("BlogPost", blogPostModel);

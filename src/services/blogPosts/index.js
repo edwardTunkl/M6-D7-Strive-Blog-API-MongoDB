@@ -5,7 +5,7 @@ import BlogPostModel from "./schema.js"
 import CommentModel from '../comments/schema.js'
 
 import { AuthorizationMiddleware } from "../authentication/basic.js"
-
+import { tokenMiddleware } from "../authentication/tokenMiddleware.js"
 
 
 const blogPostRouter = express.Router()
@@ -48,7 +48,7 @@ blogPostRouter.get("/:blogId", async (req, res, next) => {
 
 //---POST---
 
-blogPostRouter.post("/", AuthorizationMiddleware, async (req, res, next) => {
+blogPostRouter.post("/", tokenMiddleware ,async (req, res, next) => {
   try {
     const newBlog = new BlogPostModel(req.body) // validation of the req.body
     const { _id } = await newBlog.save() // interaction with the db/collection
@@ -61,7 +61,7 @@ blogPostRouter.post("/", AuthorizationMiddleware, async (req, res, next) => {
 
 //---PUT---
 
-blogPostRouter.put("/:blogId", AuthorizationMiddleware, async (req, res, next) => {
+blogPostRouter.put("/:blogId", tokenMiddleware, async (req, res, next) => {
   try {
     const blogId = req.params.blogId
     const modifiedBlogPost = await BlogPostModel.findByIdAndUpdate(blogId, req.body, {
@@ -80,7 +80,7 @@ blogPostRouter.put("/:blogId", AuthorizationMiddleware, async (req, res, next) =
 
 //---DELETE---
 
-blogPostRouter.delete("/:blogId", AuthorizationMiddleware,async (req, res, next) => {
+blogPostRouter.delete("/:blogId", tokenMiddleware, async (req, res, next) => {
   try {
     const blogId = req.params.blogId
     const deletedBlogPost = await BlogPostModel.findByIdAndDelete(blogId)

@@ -1,4 +1,4 @@
-import { verifyJWT } from "./jwtTools.js";
+import { verifyJWT } from "../authentication/token.js";
 import createHttpError from "http-errors";
 import AuthorModel from "../authors/schema.js"
  
@@ -10,8 +10,10 @@ export const tokenMiddleware = async (req, res, next) => {
   } else {
     try {
       const token = req.headers.authorization.replace("Bearer ", "");
+
       const decodedToken = await verifyJWT(token);
       console.log("DECODED TOKEN ", decodedToken);
+
       const user = await AuthorModel.findById(decodedToken._id);
 
       if (user) {

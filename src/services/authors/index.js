@@ -1,20 +1,34 @@
 import express from "express";
 import q2m from "query-to-mongo"; // Translates queries in browser into mongo readable queries (F**k yeah!!!)
+import createHttpError from "http-errors";
+import passport from "passport"
 
 import AuthorModel from "./schema.js";
 import BlogPostModel from "./schema.js";
 import { AuthorizationMiddleware } from "../authentication/basic.js";
 import { JWTAuthenticate } from "../authentication/token.js";
-import createHttpError from "http-errors";
+import { tokenMiddleware } from "../authentication/tokenMiddleware.js"
+
 
 const authorsRouter = express.Router();
 
+//---GOOGLE LOGIN---
+
+authorsRouter.get("/googleLogin", passport.authenticate("google", { scope: ["profile", "email"] }))
+
+authorsRouter.get("/googleRedirect", passport.authenticate("google"), async (req, res, next) => {
+  try {
+    console.log(req.user) // we are going to receive the tokens here thanks to the passportNext function and the serializeUser function
+    res.redirect(`http://localhost:3000?accessToken=${req.user.tokens.accessToken}&refreshToken=${req.user.tokens.refreshToken}`)
+  } catch (error) {
+    next(error)
+  }
+})
 //---Post(/login)---
 
 authorsRouter.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
-
     const author = await AuthorModel.checkCredentials(email, password);
     
     if (author) {
@@ -34,7 +48,7 @@ authorsRouter.post("/login", async (req, res, next) => {
 
 authorsRouter.get(
   "/me/stories",
-  AuthorizationMiddleware,
+  tokenMiddleware,
   async (req, res, next) => {
     try {
       const posts = await BlogPostModel.find({
@@ -88,6 +102,8 @@ authorsRouter.get("/:authorId", AuthorizationMiddleware, async (req, res, next) 
     next(error);
   }
 });
+
+
 
 //---Post---
 
